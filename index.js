@@ -1,12 +1,18 @@
+require("dotenv").config()
 const express = require("express")
 const server = express()
+const {getAllStudents,createStudent} = require("./data/dataServices")
 
-server.get(`/`,(req,res) => {
-    res.send("Testing the backend")
+server.use(express.json())
+
+server.get(`/`,async (req,res) => {
+    const students =  await getAllStudents()
+    res.send(students)
 })
 
-server.get(`/test`,(req,res) => {
-    res.send("This is different")
+server.post(`/newStudent`, async (req,res) => {
+    const resultId = await createStudent(req.body)
+    res.send(`student succesfully created! id:${resultId}`)
 })
 
 server.listen(8000, () => {
