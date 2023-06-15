@@ -1,9 +1,11 @@
 require("dotenv").config()
 const express = require("express")
 const server = express()
+const cors = require("cors")
 const {getAllStudents,createStudent} = require("./data/dataServices")
 
 server.use(express.json())
+server.use(cors())
 
 server.get(`/`,async (req,res) => {
     const students =  await getAllStudents()
