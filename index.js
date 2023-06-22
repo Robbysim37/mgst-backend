@@ -3,7 +3,7 @@ const express = require("express")
 const server = express()
 const cors = require("cors")
 const {getAllStudents,createStudent} = require("./data/dataServices")
-const {generateUsernameID} = require("./services/backendServices")
+const {generateCredentials} = require("./services/backendServices")
 
 server.use(express.json())
 server.use(cors())
@@ -14,13 +14,17 @@ server.get(`/`,async (req,res) => {
 })
 
 server.post(`/newStudent`, async (req,res) => {
-    const resultId = await createStudent(req.body)
-    res.send(`student succesfully created! id:${resultId}`)
-})
-
-server.post("/generate", (req,res) => {
-    generateUsernameID(req.body.amount)
-    res.send("complete")
+    // const resultId = await createStudent(req.body)
+    // res.send(`student succesfully created! id:${resultId}`)
+    const newStudentAccounts = generateCredentials(req.body)
+    
+    res.send(
+        newStudentAccounts.map(currStudent => {
+            return `${currStudent.firstName + currStudent.lastname} - 
+            username: ${currStudent.username} - 
+            password: ${currStudent.password}`
+        })
+    )
 })
 
 server.listen(8000, () => {
