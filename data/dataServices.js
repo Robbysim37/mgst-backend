@@ -1,3 +1,12 @@
+//STUDENT SHAPE GOING INTO DB
+//firstName: String
+//lastName: String
+//schedule: Array of class objects
+//grade: Number
+//cohort: Number
+//username: String
+//password: hashed String
+
 const {MongoClient} = require("mongodb")
 
 const newConnection = () => {
