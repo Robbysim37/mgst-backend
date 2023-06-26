@@ -2,6 +2,7 @@
 //Takes last two digits of the current year, 
 //and is followed by a random 6 digit number
 
+const {createSchedule} = require("../scheduleSchema/schedule")
 const crypto = require('crypto')
 
 const generatePassword = () => {
@@ -11,7 +12,6 @@ const generatePassword = () => {
       .map((x) => wishlist[x % wishlist.length])
       .join('')
 }
-
 
 const generateUsernameID = (student) => {
         const firstLetter = student.firstName.split("")[0]
@@ -29,17 +29,38 @@ const generateUsernameID = (student) => {
         return firstLetter + student.lastName + year + randomInt.join("")
 }
 
+const checkGrade = (schedule) => {
+    let credits = 0
+    schedule.map(year => {
+        year.map(trimester => {
+            trimester.map(course => {
+                if(course.completed){
+                    credits += course.creditAmount
+                }
+            })
+        })
+    })
+    return Math.ceil((credits/4.5) + .001)}
+
 const generateCredentials = (incomingArray) => {
-     studentAccounts = incomingArray.map(currStudent => {
+    studentAccounts = incomingArray.map(currStudent => {
         return {
             ...currStudent, 
             username:generateUsernameID(currStudent),
-            password:generatePassword()}
+            password:generatePassword(),
+            schedule:createSchedule()
+        }
     })
-    console.log(studentAccounts)
+    studentAccounts = studentAccounts.map(currStudent => {
+            return {
+                ...currStudent,
+                grade:checkGrade(currStudent.schedule)
+            }
+        })
     return studentAccounts
 }
 
 module.exports ={
-    generateCredentials
+    generateCredentials,
+    checkGrade
 }

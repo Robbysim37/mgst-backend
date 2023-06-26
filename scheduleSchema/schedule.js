@@ -16,7 +16,8 @@ const createCourse = (className,creditType,completed,notes) => {
     return course
 }
 
-
+//schedule[0][0][0]
+//[0-3][0-2][0-2]
 
 const createSchedule = () => {
    const schedule = [
@@ -35,7 +36,7 @@ const createSchedule = () => {
             [
                 createCourse("World History B","History",false,""),
                 createCourse("Bio B","Science",false,""),
-                createCourse("Health","Elective",false,"")
+                createCourse("Economics","History",false,"")
             ]
         ],
         [
@@ -53,7 +54,7 @@ const createSchedule = () => {
             [
                 createCourse("Government","History",false,""),
                 createCourse("Chemistry/Physics","Science",false,""),
-                createCourse("Economics","History",false,"")
+                createCourse("Health","Elective",false,"")
             ]
         ],
         [

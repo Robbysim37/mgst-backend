@@ -22,14 +22,11 @@ const getAllStudents = async () => {
     return dbStudents
 }
 
-const createStudent = async (newStudent) => {
-
-    console.log("NewStudent:" + newStudent)
+const createStudent = async (newStudents) => {
     const client = newConnection()
     await client.connect()
     const usersStudents = client.db("users").collection("_students")
-    const result = await usersStudents.insertOne(newStudent)
-    console.log("here:" + result)
+    const result = await usersStudents.insertMany(newStudents)
     return result.insertedId
 }
 
