@@ -15,14 +15,13 @@ server.get(`/`,async (req,res) => {
     res.send(students)
 })
 
-server.post(`/newStudent`, async (req,res) => {
-    // const resultId = await createStudent(req.body)
-    // res.send(`student succesfully created! id:${resultId}`)
+server.post(`/newStudents`, async (req,res) => {
     const newStudentAccounts = generateCredentials(req.body)
-    
+    await createStudent(newStudentAccounts)
+
     res.send(
         newStudentAccounts.map(currStudent => {
-            return `${currStudent.firstName + currStudent.lastname} - 
+            return `${currStudent.firstName + currStudent.lastName} - 
             username: ${currStudent.username} - 
             password: ${currStudent.password}`
         })
