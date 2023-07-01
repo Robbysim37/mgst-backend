@@ -2,13 +2,15 @@ require("dotenv").config()
 const express = require("express")
 const server = express()
 const cors = require("cors")
-const {getAllStudents,createStudent} = require("./data/dataServices")
+const {getAllStudents,createStudent,deleteStudent} = require("./data/dataServices")
 const {generateCredentials} = require("./services/backendServices")
 
 const {createSchedule} = require("./scheduleSchema/schedule")
 
-server.use(express.json())
 server.use(cors())
+
+server.use(express.json())
+
 
 server.get(`/`,async (req,res) => {
     const students =  await getAllStudents()
@@ -26,6 +28,11 @@ server.post(`/newStudents`, async (req,res) => {
             password: ${currStudent.password}`
         })
     )
+})
+
+server.delete(`/deleteStudent`, async (req,res) => {
+    const deleteResult = await deleteStudent(req.body.username)
+    res.send(`successfully deleted ${deleteResult.deletedCount} student(s) `)
 })
 
 server.get('/generateSchedule', (req,res) => {

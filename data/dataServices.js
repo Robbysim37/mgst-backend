@@ -1,7 +1,7 @@
 //STUDENT SHAPE GOING INTO DB
 //firstName: String
 //lastName: String
-//schedule: Array of class objects
+//schedule: Array of course objects
 //grade: Number
 //cohort: Number
 //username: String
@@ -25,12 +25,21 @@ const getAllStudents = async () => {
 const createStudent = async (newStudents) => {
     const client = newConnection()
     await client.connect()
-    const usersStudents = client.db("users").collection("_students")
-    const result = await usersStudents.insertMany(newStudents)
+    const dbStudents = client.db("users").collection("_students")
+    const result = await dbStudents.insertMany(newStudents)
     return result.insertedId
+}
+
+const deleteStudent = async (incomingUsername) => {
+    const client = newConnection()
+    await client.connect()
+    const dbStudents = client.db("users").collection("_students")
+    const result = await dbStudents.deleteOne({username:incomingUsername})
+    return result
 }
 
 module.exports = {
     getAllStudents,
-    createStudent
+    createStudent,
+    deleteStudent
 }

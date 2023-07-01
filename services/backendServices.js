@@ -43,6 +43,15 @@ const checkGrade = (schedule) => {
     return Math.ceil((credits/4.5) + .001)}
 
 const generateCredentials = (incomingArray) => {
+
+    //**** 
+    //definitely fix this mapping twice thing!
+    //Probably a better way to do it
+    //At this point staff is sending the complete courses before a schedule
+    //Is made, so you can look at the complete courses of a student, 
+    //Add those up, and then assign a grade based on incoming data.
+    //****
+
     studentAccounts = incomingArray.map(currStudent => {
         return {
             ...currStudent, 
