@@ -38,8 +38,22 @@ const deleteStudent = async (incomingUsername) => {
     return result
 }
 
+const updateStudentInfo = async(incomingData) => {
+    const client = newConnection()
+    await client.connect()
+    const dbStudents = client.db("users").collection("_students")
+    .updateOne({username:incomingData.username},
+        {
+            $set: 
+            {"firstName":incomingData.firstName,
+            "lastName":incomingData.lastName,
+            "cohort":incomingData.cohort}
+        })
+}
+
 module.exports = {
     getAllStudents,
     createStudent,
-    deleteStudent
+    deleteStudent,
+    updateStudentInfo
 }
