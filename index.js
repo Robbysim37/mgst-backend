@@ -2,7 +2,13 @@ require("dotenv").config()
 const express = require("express")
 const server = express()
 const cors = require("cors")
-const {getAllStudents,createStudent,deleteStudent,updateStudentInfo} = require("./data/dataServices")
+const {
+    getAllStudents,
+    createStudent,
+    deleteStudent,
+    updateStudentInfo,
+    updateCourseCompletion}
+     = require("./data/dataServices")
 const {generateCredentials} = require("./services/backendServices")
 
 const {createSchedule} = require("./scheduleSchema/schedule")
@@ -41,8 +47,13 @@ server.get('/generateSchedule', (req,res) => {
 })
 
 server.put(`/editStudentInfo`, (req,res) => {
-    console.log(req.body)
     updateStudentInfo(req.body)
+    res.send("completed")
+})
+
+server.put(`/editCourseCompletion`, (req,res) => {
+    updateCourseCompletion(req.body)
+    res.send("completed")
 })
 
 server.listen(8000, () => {
