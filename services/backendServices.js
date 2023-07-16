@@ -1,3 +1,5 @@
+const {getStudent,updateSchedule} = require("../data/dataServices")
+
 //NEEDS TO ADD ID TO AN ACUTALLY POSTED STUDENT
 //Takes last two digits of the current year, 
 //and is followed by a random 6 digit number
@@ -69,7 +71,21 @@ const generateCredentials = (incomingArray) => {
     return studentAccounts
 }
 
+const updateCourseCompletion = async (incomingData) => {
+    let student = await getStudent(incomingData.username)
+    let course = student.schedule[incomingData.yearIndex][incomingData.trimesterIndex][incomingData.courseIndex]
+    course.completed = !course.completed
+
+    await updateSchedule(
+        {username:incomingData.username,
+        newSchedule:student.schedule}
+    )
+
+    return await getStudent(incomingData.username)
+}
+
 module.exports ={
     generateCredentials,
-    checkGrade
+    checkGrade,
+    updateCourseCompletion
 }
