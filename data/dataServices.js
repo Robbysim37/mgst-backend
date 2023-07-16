@@ -22,6 +22,14 @@ const getAllStudents = async () => {
     return dbStudents
 }
 
+const getStudent = async (incomingUsername) => {
+    const client = newConnection()
+    await client.connect()
+    const dbStudent = await client.db("users").collection("_students")
+    .findOne({username:incomingUsername})
+    return dbStudent
+}
+
 const createStudent = async (newStudents) => {
     const client = newConnection()
     await client.connect()
@@ -52,7 +60,7 @@ const updateStudentInfo = async(incomingData) => {
     return result
 }
 
-const updateCourseCompletion = async(incomingData) => {
+const updateSchedule = async(incomingData) => {
     const client = newConnection()
     await client.connect()
     const result = client.db("users").collection("_students")
@@ -66,8 +74,9 @@ const updateCourseCompletion = async(incomingData) => {
 
 module.exports = {
     getAllStudents,
+    getStudent,
     createStudent,
     deleteStudent,
     updateStudentInfo,
-    updateCourseCompletion
+    updateSchedule
 }
