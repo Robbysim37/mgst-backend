@@ -17,8 +17,8 @@ const createCourse = (className,creditType,completed,notes,completedCourseStr) =
         notes: notes,
         creditAmount: .5
     }
-
-    if(completedCourseArr.includes(course.name)){
+    
+    if(completedCourseArr.length > 0 && completedCourseArr.includes(course.name)){
         course.completed = true
     }
 
