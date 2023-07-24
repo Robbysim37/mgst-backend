@@ -4,7 +4,11 @@
 // each trimester contains 3 "class" objects
 
 
-const createCourse = (className,creditType,completed,notes) => {
+const createCourse = (className,creditType,completed,notes,completedCourseStr) => {
+
+    const completedCourseArr = completedCourseStr.split(`:`)
+    console.log(completedCourseArr)
+
     const course = 
     {
         name: className,
@@ -13,84 +17,89 @@ const createCourse = (className,creditType,completed,notes) => {
         notes: notes,
         creditAmount: .5
     }
+
+    if(completedCourseArr.includes(course.name)){
+        course.completed = true
+    }
+
     return course
 }
 
 //schedule[0][0][0]
 //[0-3][0-2][0-2]
 
-const createSchedule = () => {
+const createSchedule = (completedCourseStr) => {
    const schedule = [
         [
             //tri 1-3
             [
-                createCourse("Algebra 1A","Math",false,""),
-                createCourse("Freshman English A","English",false,""),
-                createCourse("World History A","History",false,"")
+                createCourse("Algebra 1A","Math",false,"",completedCourseStr),
+                createCourse("Freshman English A","English",false,"",completedCourseStr),
+                createCourse("World History A","History",false,"",completedCourseStr)
             ],
             [
-                createCourse("Algebra 1B","Math",false,""),
-                createCourse("Freshman English B","English",false,""),
-                createCourse("Bio A","Science",false,"")
+                createCourse("Algebra 1B","Math",false,"",completedCourseStr),
+                createCourse("Freshman English B","English",false,"",completedCourseStr),
+                createCourse("Bio A","Science",false,"",completedCourseStr)
             ],
             [
-                createCourse("World History B","History",false,""),
-                createCourse("Bio B","Science",false,""),
-                createCourse("Economics","History",false,"")
+                createCourse("World History B","History",false,"",completedCourseStr),
+                createCourse("Bio B","Science",false,"",completedCourseStr),
+                createCourse("Economics","History",false,"",completedCourseStr)
             ]
         ],
         [
             //tri 4-6
             [
-                createCourse("Geometry 1A","Math",false,""),
-                createCourse("Sophomore English A","English",false,""),
-                createCourse("Foreign Language","Elective",false,"")
+                createCourse("Geometry 1A","Math",false,"",completedCourseStr),
+                createCourse("Sophomore English A","English",false,"",completedCourseStr),
+                createCourse("Foreign Language","Elective",false,"",completedCourseStr)
             ],
             [
-                createCourse("Geometry 1B","Math",false,""),
-                createCourse("Sophomore English B","English",false,""),
-                createCourse("Foreign Language","Elective",false,"")
+                createCourse("Geometry 1B","Math",false,"",completedCourseStr),
+                createCourse("Sophomore English B","English",false,"",completedCourseStr),
+                createCourse("Foreign Language","Elective",false,"",completedCourseStr)
             ],
             [
-                createCourse("Government","History",false,""),
-                createCourse("Chemistry/Physics","Science",false,""),
-                createCourse("Health","Elective",false,"")
+                createCourse("Government","History",false,"",completedCourseStr),
+                createCourse("Chemistry/Physics","Science",false,"",completedCourseStr),
+                createCourse("Health","Elective",false,"",completedCourseStr)
             ]
         ],
         [
             //tri 7-9
             [
-                createCourse("Algebra 2A","Math",false,""),
-                createCourse("Junior English A","English",false,""),
-                createCourse("Arts","Elective",false,"")
+                createCourse("Algebra 2A","Math",false,"",completedCourseStr),
+                createCourse("Junior English A","English",false,"",completedCourseStr),
+                createCourse("Arts","Elective",false,"",completedCourseStr)
             ],
             [
-                createCourse("Algebra 2B","Math",false,""),
-                createCourse("Junior English B","English",false,""),
-                createCourse("Chemistry/Physics","Science",false,"")
+                createCourse("Algebra 2B","Math",false,"",completedCourseStr),
+                createCourse("Junior English B","English",false,"",completedCourseStr),
+                createCourse("Chemistry/Physics","Science",false,"",completedCourseStr)
             ],
             [
-                createCourse("American History A","History",false,""),
-                createCourse("Science Elective","Science",false,""),
-                createCourse("Arts","Elective",false,"")
+                createCourse("American History A","History",false,"",completedCourseStr),
+                createCourse("Science Elective","Science",false,"",completedCourseStr),
+                createCourse("Arts","Elective",false,"",completedCourseStr)
             ]
         ],
         [
             //tri 10-12
             [
-                createCourse("Math Elective","Math",false,""),
-                createCourse("Senior English A","English",false,""),
-                createCourse("American History B","History",false,"")
+                createCourse("Math Elective","Math",false,"",completedCourseStr),
+                createCourse("Senior English A","English",false,"",completedCourseStr),
+                createCourse("American History B","History",false,"",completedCourseStr)
             ],
             [
-                createCourse("Math Elective","Math",false,""),
-                createCourse("Senior English B","English",false,""),
-                createCourse("Foreign Language/Arts","Elective",false,"")
+                createCourse("Math Elective","Math",false,"",completedCourseStr),
+                createCourse("Senior English B","English",false,"",completedCourseStr),
+                createCourse("Foreign Language/Arts","Elective",false,"",completedCourseStr)
             ],
             [
-                createCourse("Physical Education","Elective",false,""),
-                createCourse("Science Elective","Science",false,""),
-                createCourse("Foreign Language/Arts","Elective",false,"")
+                createCourse("Physical Education","Elective",false,"",completedCourseStr),
+                createCourse("Science Elective","Science",false,"",completedCourseStr),
+                createCourse("Foreign Language/Arts","Elective",false,"",completedCourseStr)
             ]
         ]
     ]
