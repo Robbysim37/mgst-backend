@@ -59,7 +59,7 @@ const generateCredentials = (incomingArray) => {
             ...currStudent, 
             username:generateUsernameID(currStudent),
             password:generatePassword(),
-            schedule:createSchedule()
+            schedule:createSchedule(currStudent.completedCourses)
         }
     })
     studentAccounts = studentAccounts.map(currStudent => {
@@ -80,7 +80,6 @@ const updateCourseCompletion = async (incomingData) => {
         {username:incomingData.username,
         newSchedule:student.schedule}
     )
-
     return await getStudent(incomingData.username)
 }
 
