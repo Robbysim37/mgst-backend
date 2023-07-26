@@ -9,6 +9,19 @@
 
 const {MongoClient} = require("mongodb")
 
+const checkGrade = (schedule) => {
+    let credits = 0
+    schedule.map(year => {
+        year.map(trimester => {
+            trimester.map(course => {
+                if(course.completed){
+                    credits += course.creditAmount
+                }
+            })
+        })
+    })
+    return Math.ceil((credits/4.5) + .001)}
+
 const newConnection = () => {
     const uri = process.env.MDB
     return new MongoClient(uri)
@@ -67,7 +80,8 @@ const updateSchedule = async(incomingData) => {
     .updateOne({username:incomingData.username},
         {
             $set:
-            {"schedule":incomingData.newSchedule}
+            {"schedule":incomingData.newSchedule,
+             "grade":checkGrade(incomingData.newSchedule)}
         })
     return result
 }
