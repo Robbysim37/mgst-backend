@@ -6,10 +6,9 @@ const {
     getAllStudents,
     createStudent,
     deleteStudent,
-    updateStudentInfo,
-    updateSchedule}
+    updateStudentInfo}
      = require("./data/dataServices")
-const {generateCredentials,updateCourseCompletion} = require("./services/backendServices")
+const {generateCredentials,updateCourseCompletion,updateCourseOrder} = require("./services/backendServices")
 
 const {createSchedule} = require("./scheduleSchema/schedule")
 
@@ -53,7 +52,11 @@ server.put(`/editStudentInfo`, (req,res) => {
 
 server.put(`/editCourseCompletion`, async (req,res) => {
     const updatedStudent = await updateCourseCompletion(req.body)
-    console.log(updatedStudent)
+    res.send(updatedStudent)
+})
+
+server.put(`/updateCourseOrder`, async (req,res) => {
+    const updatedStudent = await updateCourseOrder(req.body)
     res.send(updatedStudent)
 })
 

@@ -83,8 +83,19 @@ const updateCourseCompletion = async (incomingData) => {
     return await getStudent(incomingData.username)
 }
 
+const updateCourseOrder = async (incomingData) => {
+    console.log(incomingData.username)
+    console.log(incomingData.schedule)
+    await updateSchedule(
+        {username:incomingData.username,
+        newSchedule:incomingData.schedule}
+    )
+    return "complete"
+}
+
 module.exports ={
     generateCredentials,
     checkGrade,
-    updateCourseCompletion
+    updateCourseCompletion,
+    updateCourseOrder
 }
