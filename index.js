@@ -60,6 +60,10 @@ server.put(`/updateCourseOrder`, async (req,res) => {
     res.send(updatedStudent)
 })
 
+server.post(`/staffLogin`, async (req,res) => {
+    
+})
+
 server.listen(8000, () => {
     console.log("server running on port: 8000")
 })
