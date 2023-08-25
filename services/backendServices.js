@@ -1,3 +1,4 @@
+const bcrypt = require("bcryptjs")
 const {getStudent,updateSchedule} = require("../data/dataServices")
 
 //NEEDS TO ADD ID TO AN ACUTALLY POSTED STUDENT
@@ -13,6 +14,17 @@ const generatePassword = () => {
     return Array.from(crypto.randomFillSync(new Uint32Array(length)))
       .map((x) => wishlist[x % wishlist.length])
       .join('')
+}
+
+const hashPassword = (password) => {
+    return bcrypt.hashSync(password, 12)
+}
+
+const staffPasswordHash = (staff) => {
+    return {
+        ...staff,
+        password:hashPassword(staff.password)
+    }
 }
 
 const generateUsernameID = (student) => {
@@ -54,11 +66,22 @@ const generateCredentials = (incomingArray) => {
     //Add those up, and then assign a grade based on incoming data.
     //****
 
-    studentAccounts = incomingArray.map(currStudent => {
+    const firstPasswords = incomingArray.map(currStudent => {
         return {
-            ...currStudent, 
+            ...currStudent,
             username:generateUsernameID(currStudent),
-            password:generatePassword(),
+            firstTimePassword:generatePassword(),
+        }
+    })
+
+    studentAccounts = firstPasswords.map(currStudent => {
+        return {
+            lastName:currStudent.lastName,
+            firstName:currStudent.firstName,
+            cohort:currStudent.cohort,
+            completedCourses:currStudent.completedCourses,
+            username:currStudent.username,
+            password:hashPassword(currStudent.firstTimePassword),
             schedule:createSchedule(currStudent.completedCourses)
         }
     })
@@ -68,7 +91,10 @@ const generateCredentials = (incomingArray) => {
                 grade:checkGrade(currStudent.schedule)
             }
         })
-    return studentAccounts
+
+    return {
+        students:studentAccounts,
+        firstPasswords:firstPasswords}
 }
 
 const updateCourseCompletion = async (incomingData) => {
@@ -97,5 +123,6 @@ module.exports ={
     generateCredentials,
     checkGrade,
     updateCourseCompletion,
-    updateCourseOrder
+    updateCourseOrder,
+    staffPasswordHash
 }

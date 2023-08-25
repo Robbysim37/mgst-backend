@@ -51,6 +51,14 @@ const createStudent = async (newStudents) => {
     return result.insertedId
 }
 
+const createStaff = async (newStaff) => {
+    const client = newConnection()
+    await client.connect()
+    const dbStaff = client.db("users").collection("_staff")
+    const result = await dbStaff.insertOne(newStaff)
+    return result
+}
+
 const deleteStudent = async (incomingUsername) => {
     const client = newConnection()
     await client.connect()
@@ -92,5 +100,6 @@ module.exports = {
     createStudent,
     deleteStudent,
     updateStudentInfo,
-    updateSchedule
+    updateSchedule,
+    createStaff
 }
