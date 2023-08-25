@@ -6,7 +6,6 @@
 
 const createCourse = (className,creditType,completed,classCode,completedCourseArr) => {
 
-    console.log(completedCourseArr)
     const arrCopy = [...completedCourseArr]
 
     const course = 
@@ -31,7 +30,6 @@ const createCourse = (className,creditType,completed,classCode,completedCourseAr
 const createSchedule = (completedCourseStr) => {
     const completedCourseArr = completedCourseStr.split(`:`)
     const completedCourseArrCopy = [...completedCourseArr]
-    console.log(completedCourseArrCopy)
     const schedule = [
         [
             //tri 1-3

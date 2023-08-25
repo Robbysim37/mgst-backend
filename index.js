@@ -6,11 +6,10 @@ const {
     getAllStudents,
     createStudent,
     deleteStudent,
-    updateStudentInfo}
+    updateStudentInfo,
+    createStaff}
      = require("./data/dataServices")
-const {generateCredentials,updateCourseCompletion,updateCourseOrder} = require("./services/backendServices")
-
-const {createSchedule} = require("./scheduleSchema/schedule")
+const {generateCredentials,updateCourseCompletion,updateCourseOrder,staffPasswordHash} = require("./services/backendServices")
 
 server.use(cors())
 
@@ -23,14 +22,15 @@ server.get(`/`,async (req,res) => {
 })
 
 server.post(`/newStudents`, async (req,res) => {
-    const newStudentAccounts = generateCredentials(req.body)
-    await createStudent(newStudentAccounts)
+    const studentsFirstTimeInfo = generateCredentials(req.body)
+    await createStudent(studentsFirstTimeInfo.students)
 
     res.send(
-        newStudentAccounts.map(currStudent => {
+        studentsFirstTimeInfo.firstPasswords.map(currStudent => {
+
             return `${currStudent.firstName + currStudent.lastName} - 
             username: ${currStudent.username} - 
-            password: ${currStudent.password}`
+            password: ${currStudent.firstTimePassword}`
         })
     )
 })
@@ -41,7 +41,6 @@ server.delete(`/deleteStudent`, async (req,res) => {
 })
 
 server.get('/generateSchedule', (req,res) => {
-    console.log(createSchedule()[0][0])
     res.send("completed")
 })
 
@@ -58,6 +57,17 @@ server.put(`/editCourseCompletion`, async (req,res) => {
 server.put(`/updateCourseOrder`, async (req,res) => {
     const updatedStudent = await updateCourseOrder(req.body)
     res.send(updatedStudent)
+})
+
+server.post(`/createStaff`, async (req,res) => {
+    console.log(req.body)
+    const staff = staffPasswordHash(req.body)
+    const createStaffResult = await createStaff(staff)
+    if(createStaffResult){
+        res.status(200).send("Staff created Successfully")
+    }else{
+        res.status(500).send("Staff not created")
+    }
 })
 
 server.post(`/staffLogin`, async (req,res) => {
