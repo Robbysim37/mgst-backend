@@ -1,4 +1,5 @@
 require("dotenv").config()
+const bcrypt = require("bcryptjs")
 const express = require("express")
 const server = express()
 const cors = require("cors")
@@ -7,7 +8,8 @@ const {
     createStudent,
     deleteStudent,
     updateStudentInfo,
-    createStaff}
+    createStaff,
+    getStaff}
      = require("./data/dataServices")
 const {generateCredentials,updateCourseCompletion,updateCourseOrder,staffPasswordHash} = require("./services/backendServices")
 
@@ -60,7 +62,6 @@ server.put(`/updateCourseOrder`, async (req,res) => {
 })
 
 server.post(`/createStaff`, async (req,res) => {
-    console.log(req.body)
     const staff = staffPasswordHash(req.body)
     const createStaffResult = await createStaff(staff)
     if(createStaffResult){
@@ -70,8 +71,15 @@ server.post(`/createStaff`, async (req,res) => {
     }
 })
 
-server.post(`/staffLogin`, async (req,res) => {
-    
+server.post(`/staffLogin`, (req,res) => {
+    const incomingStaff = req.body
+    getStaff(incomingStaff.username).then(staff => {
+        if(incomingStaff && bcrypt.compareSync(incomingStaff.password, staff.password)){
+            res.status(200).send(staff)
+        }else{
+            res.status(400).send("incorrect credentials")
+        }
+    })
 })
 
 server.listen(8000, () => {
