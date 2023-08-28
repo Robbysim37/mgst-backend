@@ -3,6 +3,8 @@ const bcrypt = require("bcryptjs")
 const express = require("express")
 const server = express()
 const cors = require("cors")
+const jwt = require("jsonwebtoken")
+const secrets = require("./config/secrets")
 const {
     getAllStudents,
     createStudent,
@@ -16,6 +18,18 @@ const {generateCredentials,updateCourseCompletion,updateCourseOrder,staffPasswor
 server.use(cors())
 
 server.use(express.json())
+
+const generateToken = (user) => {
+    const payload = {
+        subject:user.username,
+        username:user.username
+    }
+    const secret = secrets.jwtSecret
+    const options = {
+        expiresIn: "8h"
+    }
+    return jwt.sign(payload,secret,options)
+}
 
 
 server.get(`/`,async (req,res) => {
@@ -75,7 +89,11 @@ server.post(`/staffLogin`, (req,res) => {
     const incomingStaff = req.body
     getStaff(incomingStaff.username).then(staff => {
         if(incomingStaff && bcrypt.compareSync(incomingStaff.password, staff.password)){
-            res.status(200).send(staff)
+            const token = generateToken(staff)
+            res.status(200).send({
+                message:` Welcome,${staff.username}!`,
+                token
+            })
         }else{
             res.status(400).send("incorrect credentials")
         }
