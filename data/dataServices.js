@@ -59,6 +59,14 @@ const createStaff = async (newStaff) => {
     return result
 }
 
+const getStaff = async (staffUsername) => {
+    const client = newConnection()
+    await client.connect()
+    const dbStaff = client.db("users").collection("_staff")
+    .findOne({username:staffUsername})
+    return dbStaff
+}
+
 const deleteStudent = async (incomingUsername) => {
     const client = newConnection()
     await client.connect()
@@ -101,5 +109,6 @@ module.exports = {
     deleteStudent,
     updateStudentInfo,
     updateSchedule,
-    createStaff
+    createStaff,
+    getStaff
 }

@@ -1,19 +1,35 @@
 require("dotenv").config()
+const bcrypt = require("bcryptjs")
 const express = require("express")
 const server = express()
 const cors = require("cors")
+const jwt = require("jsonwebtoken")
+const secrets = require("./config/secrets")
 const {
     getAllStudents,
     createStudent,
     deleteStudent,
     updateStudentInfo,
-    createStaff}
+    createStaff,
+    getStaff}
      = require("./data/dataServices")
 const {generateCredentials,updateCourseCompletion,updateCourseOrder,staffPasswordHash} = require("./services/backendServices")
 
 server.use(cors())
 
 server.use(express.json())
+
+const generateToken = (user) => {
+    const payload = {
+        subject:user.username,
+        username:user.username
+    }
+    const secret = secrets.jwtSecret
+    const options = {
+        expiresIn: "8h"
+    }
+    return jwt.sign(payload,secret,options)
+}
 
 
 server.get(`/`,async (req,res) => {
@@ -60,7 +76,6 @@ server.put(`/updateCourseOrder`, async (req,res) => {
 })
 
 server.post(`/createStaff`, async (req,res) => {
-    console.log(req.body)
     const staff = staffPasswordHash(req.body)
     const createStaffResult = await createStaff(staff)
     if(createStaffResult){
@@ -70,8 +85,19 @@ server.post(`/createStaff`, async (req,res) => {
     }
 })
 
-server.post(`/staffLogin`, async (req,res) => {
-    
+server.post(`/staffLogin`, (req,res) => {
+    const incomingStaff = req.body
+    getStaff(incomingStaff.username).then(staff => {
+        if(incomingStaff && bcrypt.compareSync(incomingStaff.password, staff.password)){
+            const token = generateToken(staff)
+            res.status(200).send({
+                message:` Welcome,${staff.username}!`,
+                token
+            })
+        }else{
+            res.status(400).send("incorrect credentials")
+        }
+    })
 })
 
 server.listen(8000, () => {
