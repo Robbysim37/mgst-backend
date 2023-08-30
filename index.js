@@ -11,7 +11,8 @@ const {
     deleteStudent,
     updateStudentInfo,
     createStaff,
-    getStaff}
+    getStaff,
+    updateUserToken}
      = require("./data/dataServices")
 const {generateCredentials,updateCourseCompletion,updateCourseOrder,staffPasswordHash} = require("./services/backendServices")
 
@@ -85,11 +86,15 @@ server.post(`/createStaff`, async (req,res) => {
     }
 })
 
-server.post(`/staffLogin`, (req,res) => {
+server.post(`/staffLogin`,(req,res) => {
     const incomingStaff = req.body
     getStaff(incomingStaff.username).then(staff => {
         if(incomingStaff && bcrypt.compareSync(incomingStaff.password, staff.password)){
             const token = generateToken(staff)
+            updateUserToken(incomingStaff.username,token).then(async (promise) => {
+                const newStaff = await getStaff(incomingStaff.username)
+                console.log(newStaff)
+            })
             res.status(200).send({
                 message:` Welcome,${staff.username}!`,
                 token
