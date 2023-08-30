@@ -89,6 +89,17 @@ const updateStudentInfo = async(incomingData) => {
     return result
 }
 
+const updateUserToken = async(incomingUsername,incomingToken) => {
+    const client = newConnection()
+    await client.connect()
+    const dbStaff = client.db("users").collection("_staff")
+    .updateOne({username:incomingUsername},
+        {
+            $set:{"token":incomingToken}
+        })
+    return dbStaff
+}
+
 const updateSchedule = async(incomingData) => {
     const client = newConnection()
     await client.connect()
@@ -110,5 +121,6 @@ module.exports = {
     updateStudentInfo,
     updateSchedule,
     createStaff,
-    getStaff
+    getStaff,
+    updateUserToken
 }
