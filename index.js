@@ -89,7 +89,9 @@ server.post(`/createStaff`, async (req,res) => {
 server.post(`/checkToken`,(req,res) => {
     const incomingStaff = req.body
     getStaff(incomingStaff.username).then(staff => {
-        incomingStaff.token === staff.token ? res.status(200).send(true) : res.status(200).send(false)
+        console.log(`Incoming:${incomingStaff.token}`)
+        console.log(`DB:${staff.token}`)
+        incomingStaff.token === staff.token ? res.status(200).send("true") : res.status(200).send("false")
     }).catch(error => {
         res.status(400).send(error)
     })
@@ -102,7 +104,6 @@ server.post(`/staffLogin`,(req,res) => {
             const token = generateToken(staff)
             updateUserToken(incomingStaff.username,token).then(async (promise) => {
                 const newStaff = await getStaff(incomingStaff.username)
-                console.log(newStaff)
             })
             res.status(200).send({
                 message:` Welcome,${staff.username}!`,
