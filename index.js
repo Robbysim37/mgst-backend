@@ -86,6 +86,15 @@ server.post(`/createStaff`, async (req,res) => {
     }
 })
 
+server.post(`/checkToken`,(req,res) => {
+    const incomingStaff = req.body
+    getStaff(incomingStaff.username).then(staff => {
+        incomingStaff.token === staff.token ? res.status(200).send(true) : res.status(200).send(false)
+    }).catch(error => {
+        res.status(400).send(error)
+    })
+})
+
 server.post(`/staffLogin`,(req,res) => {
     const incomingStaff = req.body
     getStaff(incomingStaff.username).then(staff => {
