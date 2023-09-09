@@ -21,16 +21,16 @@ server.use(cors())
 server.use(express.json())
 
 const checkAuth = async (req,res,next) => {
-    if(req.username){
-        const dbUser = await getStaff(req.username)
-        if(req.token === dbUser.token){
+    if(req.body.username){
+        const dbUser = await getStaff(req.body.username)
+        if(req.body.token === dbUser.token){
+            console.log("hits next")
             next()
         }
+    }else{
+        res.status(401).send("invalid auth")
     }
-    res.status(401).send("invalid auth")
 }
-
-server.user(checkAuth)
 
 const generateToken = (user) => {
     const payload = {
@@ -45,18 +45,17 @@ const generateToken = (user) => {
 }
 
 
-server.get(`/`,async (req,res) => {
+server.post(`/`, checkAuth, async (req,res) => {
     const students =  await getAllStudents()
     res.send(students)
 })
 
-server.post(`/newStudents`, async (req,res) => {
-    const studentsFirstTimeInfo = generateCredentials(req.body)
+server.post(`/newStudents`,checkAuth, async (req,res) => {
+    const studentsFirstTimeInfo = generateCredentials(req.body.data)
     await createStudent(studentsFirstTimeInfo.students)
 
     res.send(
         studentsFirstTimeInfo.firstPasswords.map(currStudent => {
-
             return `${currStudent.firstName + currStudent.lastName} - 
             username: ${currStudent.username} - 
             password: ${currStudent.firstTimePassword}`
@@ -64,31 +63,27 @@ server.post(`/newStudents`, async (req,res) => {
     )
 })
 
-server.delete(`/deleteStudent`, async (req,res) => {
-    const deleteResult = await deleteStudent(req.body.username)
+server.delete(`/deleteStudent`, checkAuth, async (req,res) => {
+    const deleteResult = await deleteStudent(req.body.data.username)
     res.send(`successfully deleted ${deleteResult.deletedCount} student(s) `)
 })
 
-server.get('/generateSchedule', (req,res) => {
+server.put(`/editStudentInfo`, checkAuth, (req,res) => {
+    updateStudentInfo(req.body.data)
     res.send("completed")
 })
 
-server.put(`/editStudentInfo`, (req,res) => {
-    updateStudentInfo(req.body)
-    res.send("completed")
-})
-
-server.put(`/editCourseCompletion`, async (req,res) => {
-    const updatedStudent = await updateCourseCompletion(req.body)
+server.put(`/editCourseCompletion`, checkAuth, async (req,res) => {
+    const updatedStudent = await updateCourseCompletion(req.body.data)
     res.send(updatedStudent)
 })
 
-server.put(`/updateCourseOrder`, async (req,res) => {
-    const updatedStudent = await updateCourseOrder(req.body)
+server.put(`/updateCourseOrder`, checkAuth, async (req,res) => {
+    const updatedStudent = await updateCourseOrder(req.body.data)
     res.send(updatedStudent)
 })
 
-server.post(`/createStaff`, async (req,res) => {
+server.post(`/createStaff`, checkAuth, async (req,res) => {
     const staff = staffPasswordHash(req.body)
     const createStaffResult = await createStaff(staff)
     if(createStaffResult){
