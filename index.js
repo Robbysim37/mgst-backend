@@ -20,6 +20,18 @@ server.use(cors())
 
 server.use(express.json())
 
+const checkAuth = async (req,res,next) => {
+    if(req.username){
+        const dbUser = await getStaff(req.username)
+        if(req.token === dbUser.token){
+            next()
+        }
+    }
+    res.status(401).send("invalid auth")
+}
+
+server.user(checkAuth)
+
 const generateToken = (user) => {
     const payload = {
         subject:user.username,
