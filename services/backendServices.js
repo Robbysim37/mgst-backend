@@ -110,8 +110,6 @@ const updateCourseCompletion = async (incomingData) => {
 }
 
 const updateCourseOrder = async (incomingData) => {
-    console.log(incomingData.username)
-    console.log(incomingData.schedule)
     await updateSchedule(
         {username:incomingData.username,
         newSchedule:incomingData.schedule}

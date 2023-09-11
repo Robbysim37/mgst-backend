@@ -24,7 +24,18 @@ const checkAuth = async (req,res,next) => {
     if(req.body.username){
         const dbUser = await getStaff(req.body.username)
         if(req.body.token === dbUser.token){
-            console.log("hits next")
+            next()
+        }
+    }else{
+        res.status(401).send("invalid auth")
+    }
+}
+
+const checkDeleteAuth = async (req,res,next) => {
+    console.log(req.body.data.data)
+    if(req.body.data.username){
+        const dbUser = await getStaff(req.body.data.username)
+        if(req.body.data.token === dbUser.token){
             next()
         }
     }else{
@@ -63,9 +74,9 @@ server.post(`/newStudents`,checkAuth, async (req,res) => {
     )
 })
 
-server.delete(`/deleteStudent`, checkAuth, async (req,res) => {
-    const deleteResult = await deleteStudent(req.body.data.username)
-    res.send(`successfully deleted ${deleteResult.deletedCount} student(s) `)
+server.delete(`/deleteStudent`, checkDeleteAuth, async (req,res) => {
+   const deleteResult = await deleteStudent(req.body.data.data)
+   res.send(`successfully deleted ${deleteResult.deletedCount} student(s) `)
 })
 
 server.put(`/editStudentInfo`, checkAuth, (req,res) => {
@@ -96,8 +107,6 @@ server.post(`/createStaff`, checkAuth, async (req,res) => {
 server.post(`/checkToken`,(req,res) => {
     const incomingStaff = req.body
     getStaff(incomingStaff.username).then(staff => {
-        console.log(`Incoming:${incomingStaff.token}`)
-        console.log(`DB:${staff.token}`)
         incomingStaff.token === staff.token ? res.status(200).send("true") : res.status(200).send("false")
     }).catch(error => {
         res.status(400).send(error)
