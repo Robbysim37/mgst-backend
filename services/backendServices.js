@@ -54,7 +54,12 @@ const checkGrade = (schedule) => {
             })
         })
     })
-    return Math.ceil((credits/4.5) + .001)}
+    if(Math.ceil(credits/4.5) === 0){
+        return 1
+    }else{
+        return Math.ceil(credits/4.5)
+    }
+}
 
 const generateCredentials = (incomingArray) => {
 
@@ -97,18 +102,6 @@ const generateCredentials = (incomingArray) => {
         firstPasswords:firstPasswords}
 }
 
-const updateCourseCompletion = async (incomingData) => {
-    let student = await getStudent(incomingData.username)
-    let course = student.schedule[incomingData.yearIndex][incomingData.trimesterIndex][incomingData.courseIndex]
-    course.completed = !course.completed
-
-    await updateSchedule(
-        {username:incomingData.username,
-        newSchedule:student.schedule}
-    )
-    return await getStudent(incomingData.username)
-}
-
 const updateCourseOrder = async (incomingData) => {
     await updateSchedule(
         {username:incomingData.username,
@@ -120,7 +113,6 @@ const updateCourseOrder = async (incomingData) => {
 module.exports ={
     generateCredentials,
     checkGrade,
-    updateCourseCompletion,
     updateCourseOrder,
     staffPasswordHash
 }

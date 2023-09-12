@@ -76,7 +76,7 @@ const createSchedule = (completedCourseStr) => {
             ],
             [
                 createCourse("Algebra 2B","Math",false,"ALG-2B",completedCourseArrCopy),
-                createCourse("Junior English B","English",false,"JUE-A",completedCourseArrCopy),
+                createCourse("Junior English B","English",false,"JUE-B",completedCourseArrCopy),
                 createCourse("Chemistry/Physics","Science",false,"CHEM/PHYS-B",completedCourseArrCopy)
             ],
             [
@@ -88,19 +88,19 @@ const createSchedule = (completedCourseStr) => {
         [
             //tri 10-12
             [
-                createCourse("Math Elective","Math",false,"MATH-A",...completedCourseArr),
-                createCourse("Senior English A","English",false,"SE-A",...completedCourseArr),
-                createCourse("American History B","History",false,"AMH-B",...completedCourseArr)
+                createCourse("Math Elective","Math",false,"MATH-A",completedCourseArr),
+                createCourse("Senior English A","English",false,"SE-A",completedCourseArr),
+                createCourse("American History B","History",false,"AMH-B",completedCourseArr)
             ],
             [
-                createCourse("Math Elective","Math",false,"MATH-B",...completedCourseArr),
-                createCourse("Senior English B","English",false,"SE-B",...completedCourseArr),
-                createCourse("Foreign Language/Arts","Elective",false,"LANG/ART-2A",...completedCourseArr)
+                createCourse("Math Elective","Math",false,"MATH-B",completedCourseArr),
+                createCourse("Senior English B","English",false,"SE-B",completedCourseArr),
+                createCourse("Foreign Language/Arts","Elective",false,"LANG/ART-2A",completedCourseArr)
             ],
             [
-                createCourse("Physical Education","Elective",false,"PHYSED",...completedCourseArr),
-                createCourse("Science Elective","Science",false,"SCI-B",...completedCourseArr),
-                createCourse("Foreign Language/Arts","Elective",false,"LANG/ART-2B",...completedCourseArr)
+                createCourse("Physical Education","Elective",false,"PHYSED",completedCourseArr),
+                createCourse("Science Elective","Science",false,"SCI-B",completedCourseArr),
+                createCourse("Foreign Language/Arts","Elective",false,"LANG/ART-2B",completedCourseArr)
             ]
         ]
     ]
