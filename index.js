@@ -14,7 +14,7 @@ const {
     getStaff,
     updateUserToken}
      = require("./data/dataServices")
-const {generateCredentials,updateCourseCompletion,updateCourseOrder,staffPasswordHash} = require("./services/backendServices")
+const {generateCredentials,updateCourseOrder,staffPasswordHash} = require("./services/backendServices")
 
 server.use(cors())
 
@@ -32,7 +32,6 @@ const checkAuth = async (req,res,next) => {
 }
 
 const checkDeleteAuth = async (req,res,next) => {
-    console.log(req.body.data.data)
     if(req.body.data.username){
         const dbUser = await getStaff(req.body.data.username)
         if(req.body.data.token === dbUser.token){
@@ -82,11 +81,6 @@ server.delete(`/deleteStudent`, checkDeleteAuth, async (req,res) => {
 server.put(`/editStudentInfo`, checkAuth, (req,res) => {
     updateStudentInfo(req.body.data)
     res.send("completed")
-})
-
-server.put(`/editCourseCompletion`, checkAuth, async (req,res) => {
-    const updatedStudent = await updateCourseCompletion(req.body.data)
-    res.send(updatedStudent)
 })
 
 server.put(`/updateCourseOrder`, checkAuth, async (req,res) => {
