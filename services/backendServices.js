@@ -20,10 +20,23 @@ const hashPassword = (password) => {
     return bcrypt.hashSync(password, 12)
 }
 
-const staffPasswordHash = (staff) => {
+const generateStaffCredentials = (incomingStaffUsername) => {
+    const firstTimePassword = generatePassword()
+
+    const staffConfirmation = {
+        username:incomingStaffUsername,
+        firstTimePassword
+    }
+
+    const staff = {
+        username:incomingStaffUsername,
+        password:hashPassword(firstTimePassword),
+        type:"staff"
+    }
+
     return {
-        ...staff,
-        password:hashPassword(staff.password)
+        staffConfirmation,
+        staff
     }
 }
 
@@ -114,5 +127,5 @@ module.exports ={
     generateCredentials,
     checkGrade,
     updateCourseOrder,
-    staffPasswordHash
+    generateStaffCredentials
 }
