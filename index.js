@@ -14,7 +14,11 @@ const {
     getStaff,
     updateUserToken}
      = require("./data/dataServices")
-const {generateCredentials,updateCourseOrder,staffPasswordHash} = require("./services/backendServices")
+const {
+    generateCredentials,
+    updateCourseOrder,
+    getAllStaff,
+    generateStaffCredentials} = require("./services/backendServices")
 
 server.use(cors())
 
@@ -31,6 +35,14 @@ const checkAuth = async (req,res,next) => {
     }
 }
 
+const checkAdmin = (req,res,next) => {
+    if(req.body.type === "admin"){
+        next()
+    }else{
+        res.status(401).send("You are not authorized to do that")
+    }
+}
+ 
 const checkDeleteAuth = async (req,res,next) => {
     if(req.body.data.username){
         const dbUser = await getStaff(req.body.data.username)
@@ -88,14 +100,20 @@ server.put(`/updateCourseOrder`, checkAuth, async (req,res) => {
     res.send(updatedStudent)
 })
 
-server.post(`/createStaff`, checkAuth, async (req,res) => {
-    const staff = staffPasswordHash(req.body)
-    const createStaffResult = await createStaff(staff)
+server.post(`/createStaff`, checkAuth, checkAdmin, async (req,res) => {
+    const incomingStaffUsername = req.body
+    const staffData = generateStaffCredentials(incomingStaffUsername)
+    const createStaffResult = await createStaff(staffData.staff)
     if(createStaffResult){
-        res.status(200).send("Staff created Successfully")
+        res.status(200).send(staffData.staffConfirmation)
     }else{
         res.status(500).send("Staff not created")
     }
+})
+
+server.post(`/getStaff`,checkAuth,checkAdmin, async (req,res) => {
+    const allStaff = await getAllStaff()
+    res.status(200).send(allStaff)
 })
 
 server.post(`/checkToken`,(req,res) => {
