@@ -78,9 +78,12 @@ server.post(`/newStudents`,checkAuth, async (req,res) => {
 
     res.send(
         studentsFirstTimeInfo.firstPasswords.map(currStudent => {
-            return `${currStudent.firstName + currStudent.lastName} - 
-            username: ${currStudent.username} - 
-            password: ${currStudent.firstTimePassword}`
+            return {
+                firstName: currStudent.firstName,
+                lastName: currStudent.lastName,
+                username: currStudent.username,
+                password: currStudent.firstTimePassword                
+            }
         })
     )
 })
@@ -101,7 +104,7 @@ server.put(`/updateCourseOrder`, checkAuth, async (req,res) => {
 })
 
 server.post(`/createStaff`, checkAuth, checkAdmin, async (req,res) => {
-    const incomingStaffUsername = req.body
+    const incomingStaffUsername = req.body.data
     const staffData = generateStaffCredentials(incomingStaffUsername)
     const createStaffResult = await createStaff(staffData.staff)
     if(createStaffResult){
