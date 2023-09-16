@@ -83,6 +83,14 @@ const deleteStudent = async (incomingUsername) => {
     return result
 }
 
+const deleteStaff = async (incomingUsername) => {
+    const client = newConnection()
+    await client.connect()
+    const dbStaff = client.db("users").collection("_staff")
+    const result = await dbStaff.deleteOne({username:incomingUsername})
+    return result
+}
+
 const updateStudentInfo = async(incomingData) => {
     const client = newConnection()
     await client.connect()
@@ -131,5 +139,6 @@ module.exports = {
     createStaff,
     getStaff,
     updateUserToken,
-    getAllStaff
+    getAllStaff,
+    deleteStaff
 }
