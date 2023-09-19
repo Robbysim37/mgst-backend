@@ -12,12 +12,12 @@ const {
     updateStudentInfo,
     createStaff,
     getStaff,
-    updateUserToken}
+    updateUserToken,
+    getAllStaff}
      = require("./data/dataServices")
 const {
     generateCredentials,
     updateCourseOrder,
-    getAllStaff,
     generateStaffCredentials} = require("./services/backendServices")
 
 server.use(cors())
@@ -28,6 +28,7 @@ const checkAuth = async (req,res,next) => {
     if(req.body.username){
         const dbUser = await getStaff(req.body.username)
         if(req.body.token === dbUser.token){
+            req.body.type = dbUser.type
             next()
         }
     }else{
@@ -47,6 +48,9 @@ const checkDeleteAuth = async (req,res,next) => {
     if(req.body.data.username){
         const dbUser = await getStaff(req.body.data.username)
         if(req.body.data.token === dbUser.token){
+            if(dbUser.type === "admin"){
+                req.body.type === "admin"
+            }
             next()
         }
     }else{
@@ -93,6 +97,11 @@ server.delete(`/deleteStudent`, checkDeleteAuth, async (req,res) => {
    res.send(`successfully deleted ${deleteResult.deletedCount} student(s) `)
 })
 
+server.delete(`/deleteStudent`, checkDeleteAuth, checkAdmin, async (req,res) => {
+    const deleteResult = await deleteStaff(req.body.data.data)
+    res.send(`successfully deleted ${deleteResult.deletedCount} Staff `)
+})
+
 server.put(`/editStudentInfo`, checkAuth, (req,res) => {
     updateStudentInfo(req.body.data)
     res.send("completed")
@@ -116,7 +125,10 @@ server.post(`/createStaff`, checkAuth, checkAdmin, async (req,res) => {
 
 server.post(`/getStaff`,checkAuth,checkAdmin, async (req,res) => {
     const allStaff = await getAllStaff()
-    res.status(200).send(allStaff)
+    const staffUsernames = allStaff.map(currStaff => {
+        return currStaff.username
+    })
+    res.status(200).send(staffUsernames)
 })
 
 server.post(`/checkToken`,(req,res) => {
@@ -130,14 +142,13 @@ server.post(`/checkToken`,(req,res) => {
 
 server.post(`/staffLogin`,(req,res) => {
     const incomingStaff = req.body
-    getStaff(incomingStaff.username).then(staff => {
+    getStaff(incomingStaff.username).then( async (staff) => {
         if(incomingStaff && bcrypt.compareSync(incomingStaff.password, staff.password)){
             const token = generateToken(staff)
-            updateUserToken(incomingStaff.username,token).then(async (promise) => {
-                const newStaff = await getStaff(incomingStaff.username)
-            })
+            await updateUserToken(incomingStaff.username,token)
             res.status(200).send({
-                message:` Welcome,${staff.username}!`,
+                username:staff.username,
+                type:staff.type,
                 token
             })
         }else{
