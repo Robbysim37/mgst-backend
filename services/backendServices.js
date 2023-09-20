@@ -1,5 +1,5 @@
 const bcrypt = require("bcryptjs")
-const {getStudent,updateSchedule} = require("../data/dataServices")
+const {updateSchedule} = require("../data/dataServices")
 
 //NEEDS TO ADD ID TO AN ACUTALLY POSTED STUDENT
 //Takes last two digits of the current year, 
@@ -38,6 +38,19 @@ const generateStaffCredentials = (incomingStaffUsername) => {
         staffConfirmation,
         staff
     }
+}
+
+const resetPassword = (student) => {
+    const newTemporaryPassword = generatePassword()
+
+    const newStudentPassword = {
+        firstName:student.firstName,
+        lastName:student.lastName,
+        username:student.username,
+        tempPassword:hashPassword(newTemporaryPassword)
+    }
+    
+    return newStudentPassword
 }
 
 const generateUsernameID = (student) => {
@@ -127,5 +140,6 @@ module.exports ={
     generateCredentials,
     checkGrade,
     updateCourseOrder,
-    generateStaffCredentials
+    generateStaffCredentials,
+    resetPassword
 }

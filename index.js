@@ -13,12 +13,15 @@ const {
     createStaff,
     getStaff,
     updateUserToken,
-    getAllStaff}
+    getAllStaff,
+    getStudent,
+    updateStudentPassword}
      = require("./data/dataServices")
 const {
     generateCredentials,
     updateCourseOrder,
-    generateStaffCredentials} = require("./services/backendServices")
+    generateStaffCredentials,
+    resetPassword} = require("./services/backendServices")
 
 server.use(cors())
 
@@ -92,12 +95,19 @@ server.post(`/newStudents`,checkAuth, async (req,res) => {
     )
 })
 
+server.put(`/resetPassword`, checkAuth, async (req,res) => {
+    const student = await getStudent(req.body.username)
+    const newStudentPassword = resetPassword(student)
+    await updateStudentPassword(newStudentPassword)
+    res.status(200).send({newStudentPassword})
+})
+
 server.delete(`/deleteStudent`, checkDeleteAuth, async (req,res) => {
    const deleteResult = await deleteStudent(req.body.data.data)
    res.send(`successfully deleted ${deleteResult.deletedCount} student(s) `)
 })
 
-server.delete(`/deleteStudent`, checkDeleteAuth, checkAdmin, async (req,res) => {
+server.delete(`/deleteStaff`, checkDeleteAuth, checkAdmin, async (req,res) => {
     const deleteResult = await deleteStaff(req.body.data.data)
     res.send(`successfully deleted ${deleteResult.deletedCount} Staff `)
 })
