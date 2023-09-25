@@ -9,6 +9,7 @@ const {
     getAllStudents,
     createStudent,
     deleteStudent,
+    deleteStaff,
     updateStudentInfo,
     createStaff,
     getStaff,
@@ -40,7 +41,7 @@ const checkAuth = async (req,res,next) => {
 }
 
 const checkAdmin = (req,res,next) => {
-    if(req.body.type === "admin"){
+    if(req.body.type === "admin" || req.body.data.type === "admin"){
         next()
     }else{
         res.status(401).send("You are not authorized to do that")
@@ -52,7 +53,7 @@ const checkDeleteAuth = async (req,res,next) => {
         const dbUser = await getStaff(req.body.data.username)
         if(req.body.data.token === dbUser.token){
             if(dbUser.type === "admin"){
-                req.body.type === "admin"
+                req.body.data.type = "admin"
             }
             next()
         }
@@ -96,10 +97,10 @@ server.post(`/newStudents`,checkAuth, async (req,res) => {
 })
 
 server.put(`/resetPassword`, checkAuth, async (req,res) => {
-    const student = await getStudent(req.body.username)
-    const newStudentPassword = resetPassword(student)
-    await updateStudentPassword(newStudentPassword)
-    res.status(200).send({newStudentPassword})
+    const student = await getStudent(req.body.data)
+    const {dataToShow,dataToStore} = resetPassword(student)
+    await updateStudentPassword({dataToStore,needsReset:true})
+    res.status(200).send([dataToShow])
 })
 
 server.delete(`/deleteStudent`, checkDeleteAuth, async (req,res) => {
@@ -109,7 +110,7 @@ server.delete(`/deleteStudent`, checkDeleteAuth, async (req,res) => {
 
 server.delete(`/deleteStaff`, checkDeleteAuth, checkAdmin, async (req,res) => {
     const deleteResult = await deleteStaff(req.body.data.data)
-    res.send(`successfully deleted ${deleteResult.deletedCount} Staff `)
+    res.send(`successfully deleted staff member `)
 })
 
 server.put(`/editStudentInfo`, checkAuth, (req,res) => {
@@ -135,7 +136,14 @@ server.post(`/createStaff`, checkAuth, checkAdmin, async (req,res) => {
 
 server.post(`/getStaff`,checkAuth,checkAdmin, async (req,res) => {
     const allStaff = await getAllStaff()
-    const staffUsernames = allStaff.map(currStaff => {
+    const staff = allStaff.filter(currStaff => {
+        if(currStaff.type !== "admin"){
+            return true
+        }else{
+            return false
+        }
+    })
+    const staffUsernames = staff.map(currStaff => {
         return currStaff.username
     })
     res.status(200).send(staffUsernames)

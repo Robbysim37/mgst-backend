@@ -109,10 +109,11 @@ const updateStudentPassword = async(incomingStudent) => {
     const client = newConnection()
     await client.connect()
     const result = client.db("users").collection("_students")
-    .updateOne({username:incomingStudent.username},
+    .updateOne({username:incomingStudent.dataToStore.username},
         {
             $set:{
-                "password":incomingStudent.password
+                "password":incomingStudent.dataToStore.password,
+                "needsPasswordReset":incomingStudent.needsReset
             }
         })
     return result

@@ -43,14 +43,19 @@ const generateStaffCredentials = (incomingStaffUsername) => {
 const resetPassword = (student) => {
     const newTemporaryPassword = generatePassword()
 
-    const newStudentPassword = {
+    const dataToShow = {
         firstName:student.firstName,
         lastName:student.lastName,
         username:student.username,
-        tempPassword:hashPassword(newTemporaryPassword)
+        password:newTemporaryPassword
+    }
+
+    const dataToStore = {
+        username:student.username,
+        password:hashPassword(newTemporaryPassword)
     }
     
-    return newStudentPassword
+    return {dataToShow,dataToStore}
 }
 
 const generateUsernameID = (student) => {
@@ -111,6 +116,7 @@ const generateCredentials = (incomingArray) => {
             firstName:currStudent.firstName,
             cohort:currStudent.cohort,
             completedCourses:currStudent.completedCourses,
+            needsPasswordReset:true,
             username:currStudent.username,
             password:hashPassword(currStudent.firstTimePassword),
             schedule:createSchedule(currStudent.completedCourses)
