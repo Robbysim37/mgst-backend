@@ -16,13 +16,15 @@ const {
     updateUserToken,
     getAllStaff,
     getStudent,
-    updateStudentPassword}
+    updateStudentPassword,
+    updateStaffPassword}
      = require("./data/dataServices")
 const {
     generateCredentials,
     updateCourseOrder,
     generateStaffCredentials,
-    resetPassword} = require("./services/backendServices")
+    resetPassword,
+    resetStaffPassword} = require("./services/backendServices")
 
 server.use(cors())
 
@@ -99,8 +101,15 @@ server.post(`/newStudents`,checkAuth, async (req,res) => {
 server.put(`/resetPassword`, checkAuth, async (req,res) => {
     const student = await getStudent(req.body.data)
     const {dataToShow,dataToStore} = resetPassword(student)
-    await updateStudentPassword({dataToStore,needsReset:true})
+    await updateStudentPassword(dataToStore)
     res.status(200).send([dataToShow])
+})
+
+server.put(`/resetStaffPassword`, checkAuth, checkAdmin, async (req,res) => {
+    const staff = await getStaff(req.body.data)
+    const {dataToShow,dataToStore} = resetStaffPassword(staff)
+    await updateStaffPassword(dataToStore)
+    res.status(200).send(dataToShow)
 })
 
 server.delete(`/deleteStudent`, checkDeleteAuth, async (req,res) => {
@@ -170,7 +179,7 @@ server.post(`/staffLogin`,(req,res) => {
                 token
             })
         }else{
-            res.status(400).send("incorrect credentials")
+            res.status(400).send("Username or password is incorrect!")
         }
     })
 })

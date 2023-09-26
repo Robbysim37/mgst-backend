@@ -109,11 +109,25 @@ const updateStudentPassword = async(incomingStudent) => {
     const client = newConnection()
     await client.connect()
     const result = client.db("users").collection("_students")
-    .updateOne({username:incomingStudent.dataToStore.username},
+    .updateOne({username:incomingStudent.username},
         {
             $set:{
-                "password":incomingStudent.dataToStore.password,
-                "needsPasswordReset":incomingStudent.needsReset
+                "password":incomingStudent.password,
+                "needsPasswordReset":incomingStudent.needsPasswordReset
+            }
+        })
+    return result
+}
+
+const updateStaffPassword = async(incomingStaff) => {
+    const client = newConnection()
+    await client.connect()
+    const result = client.db("users").collection("_staff")
+    .updateOne({username:incomingStaff.username},
+        {
+            $set:{
+                "password":incomingStaff.password,
+                "needsPasswordReset":incomingStaff.needsPasswordReset
             }
         })
     return result
@@ -155,5 +169,6 @@ module.exports = {
     updateUserToken,
     getAllStaff,
     deleteStaff,
-    updateStudentPassword
+    updateStudentPassword,
+    updateStaffPassword
 }
