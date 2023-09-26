@@ -25,12 +25,13 @@ const generateStaffCredentials = (incomingStaffUsername) => {
 
     const staffConfirmation = {
         username:incomingStaffUsername,
-        firstTimePassword
+        password:firstTimePassword
     }
 
     const staff = {
         username:incomingStaffUsername,
         password:hashPassword(firstTimePassword),
+        needsPasswordReset:true,
         type:"staff"
     }
 
@@ -52,9 +53,27 @@ const resetPassword = (student) => {
 
     const dataToStore = {
         username:student.username,
-        password:hashPassword(newTemporaryPassword)
+        password:hashPassword(newTemporaryPassword),
+        needsPasswordReset:true
     }
     
+    return {dataToShow,dataToStore}
+}
+
+const resetStaffPassword = (staff) => {
+    const newPassword = generatePassword()
+
+    const dataToShow = {
+        username:staff.username,
+        password:newPassword
+    }
+
+    const dataToStore = {
+        username:staff.username,
+        password:hashPassword(newPassword),
+        needsPasswordReset:true
+    }
+
     return {dataToShow,dataToStore}
 }
 
@@ -147,5 +166,6 @@ module.exports ={
     checkGrade,
     updateCourseOrder,
     generateStaffCredentials,
-    resetPassword
+    resetPassword,
+    resetStaffPassword
 }
