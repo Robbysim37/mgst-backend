@@ -175,6 +175,7 @@ server.post(`/staffLogin`,(req,res) => {
             await updateUserToken(incomingStaff.username,token)
             res.status(200).send({
                 username:staff.username,
+                needsPasswordReset:staff.needsPasswordReset,
                 type:staff.type,
                 token
             })
