@@ -24,7 +24,8 @@ const {
     updateCourseOrder,
     generateStaffCredentials,
     resetPassword,
-    resetStaffPassword} = require("./services/backendServices")
+    resetStaffPassword,
+    hashPassword} = require("./services/backendServices")
 
 server.use(cors())
 
@@ -110,6 +111,16 @@ server.put(`/resetStaffPassword`, checkAuth, checkAdmin, async (req,res) => {
     const {dataToShow,dataToStore} = resetStaffPassword(staff)
     await updateStaffPassword(dataToStore)
     res.status(200).send(dataToShow)
+})
+
+server.put(`/changeStaffPassword`, checkAuth, async (req,res) => {
+    const staffPasswordChange = {
+        username:req.body.username,
+        password:hashPassword(req.body.data),
+        needsPasswordReset:false
+    }
+    await updateStaffPassword(staffPasswordChange)
+    res.status(200).send("Staff password Change Successful")
 })
 
 server.delete(`/deleteStudent`, checkDeleteAuth, async (req,res) => {

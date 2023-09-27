@@ -167,5 +167,6 @@ module.exports ={
     updateCourseOrder,
     generateStaffCredentials,
     resetPassword,
-    resetStaffPassword
+    resetStaffPassword,
+    hashPassword
 }
