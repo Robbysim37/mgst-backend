@@ -14,7 +14,8 @@ const createCourse = (className,creditType,completed,classCode,completedCourseAr
         creditType: creditType,
         completed: completed,
         classCode:classCode,
-        creditAmount: .5
+        creditAmount: .5,
+        notes: ""
     }
     
     if(arrCopy.length > 0 && arrCopy.includes(course.classCode)){
