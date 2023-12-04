@@ -1,0 +1,22 @@
+{
+    "version": 2,
+    "builds": [
+        {
+            "src":"./index.js",
+            "use": "@vercel/node"
+        }
+    ],
+    "routes": [
+        {
+            "src":"/(.*)",
+            "dest":"/"
+        }
+    ],"projectSettings": {
+        "buildCommand": null,
+        "devCommand": null,
+        "framework": "nextjs",
+        "commandForIgnoringBuildStep": "",
+        "installCommand": null,
+        "outputDirectory": null
+    }
+}
